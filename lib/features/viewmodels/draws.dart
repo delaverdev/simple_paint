@@ -65,12 +65,7 @@ class DrawsModel extends StateNotifier<DrawsState> {
         backgroundImageBytes: backgroundImage,
       );
 
-      final updatedDraws = [createdDraw, ...state.draws];
-      state = state.copyWith(
-        draws: updatedDraws,
-        loading: false,
-        errored: false,
-      );
+      state = state.copyWith(loading: false, errored: false);
 
       return createdDraw;
     } catch (e) {
@@ -151,7 +146,12 @@ class DrawsModel extends StateNotifier<DrawsState> {
 
   void subscribeToDraws() {
     final user = _ref.read(userStateProvider);
-    if (user == null || _isSubscribed) return;
+    if (user == null) {
+      return;
+    }
+    if (_isSubscribed) {
+      return;
+    }
 
     try {
       _drawsSubscription?.cancel();
@@ -160,11 +160,16 @@ class DrawsModel extends StateNotifier<DrawsState> {
           .subscribeToUserDraws(user.id)
           .listen(
             (updatedDraw) {
+              print(
+                '[DRAWS STREAM] RECIEVED: ${updatedDraw.id}',
+              );
               _handleDrawUpdate(updatedDraw);
             },
             onError: (error) {
+              print('[DRAWS STREAM] ERROR: $error');
               state = state.copyWith(errored: true);
             },
+            onDone: () {},
           );
       _isSubscribed = true;
     } catch (e) {
@@ -173,6 +178,31 @@ class DrawsModel extends StateNotifier<DrawsState> {
   }
 
   void _handleDrawUpdate(Draw updatedDraw) {
+    if (updatedDraw.backgroundImageUrl != null &&
+        updatedDraw.backgroundImageUrl!.isNotEmpty) {
+      _loadImageForDraw(updatedDraw);
+    } else {
+      _updateDrawInList(updatedDraw);
+    }
+  }
+
+  Future<void> _loadImageForDraw(Draw draw) async {
+    try {
+      final imageBytes = await _drawsRepo.downloadImageBytes(
+        draw.backgroundImageUrl!,
+      );
+      if (imageBytes != null) {
+        final drawWithImage = draw.copyWith(backgroundImageBytes: imageBytes);
+        _updateDrawInList(drawWithImage);
+      } else {
+        _updateDrawInList(draw);
+      }
+    } catch (e) {
+      _updateDrawInList(draw);
+    }
+  }
+
+  void _updateDrawInList(Draw updatedDraw) {
     final currentDraws = List<Draw>.from(state.draws);
 
     final existingIndex = currentDraws.indexWhere(
@@ -201,8 +231,13 @@ class DrawsModel extends StateNotifier<DrawsState> {
   }
 
   void addDrawToList(Draw newDraw) {
-    final updatedDraws = [newDraw, ...state.draws];
-    state = state.copyWith(draws: updatedDraws);
+    final existingIndex = state.draws.indexWhere(
+      (draw) => draw.id == newDraw.id,
+    );
+    if (existingIndex == -1) {
+      final updatedDraws = [newDraw, ...state.draws];
+      state = state.copyWith(draws: updatedDraws);
+    }
   }
 
   void removeDrawFromList(String drawId) {

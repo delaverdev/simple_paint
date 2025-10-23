@@ -23,10 +23,20 @@ class DrawsRepositoryImpl implements DrawsRepository {
       for (final draw in draws) {
         if (draw.backgroundImageUrl != null &&
             draw.backgroundImageUrl!.isNotEmpty) {
-          final imageBytes = await _dataSource.downloadImageBytes(
-            draw.backgroundImageUrl!,
-          );
-          drawsWithImages.add(draw.copyWith(backgroundImageBytes: imageBytes));
+          try {
+            final imageBytes = await _dataSource.downloadImageBytes(
+              draw.backgroundImageUrl!,
+            );
+            if (imageBytes != null) {
+              drawsWithImages.add(
+                draw.copyWith(backgroundImageBytes: imageBytes),
+              );
+            } else {
+              drawsWithImages.add(draw);
+            }
+          } catch (e) {
+            drawsWithImages.add(draw);
+          }
         } else {
           drawsWithImages.add(draw);
         }
@@ -66,7 +76,7 @@ class DrawsRepositoryImpl implements DrawsRepository {
           userId,
           fileName,
         );
-      }
+      } 
 
       final draw = Draw(
         id: '',
@@ -76,7 +86,8 @@ class DrawsRepositoryImpl implements DrawsRepository {
         backgroundImageBytes: backgroundImageBytes,
       );
 
-      return await createDraw(draw);
+      final result = await createDraw(draw);
+      return result;
     } catch (e) {
       rethrow;
     }
@@ -227,6 +238,11 @@ class DrawsRepositoryImpl implements DrawsRepository {
     };
 
     return controller.stream;
+  }
+
+  @override
+  Future<Uint8List?> downloadImageBytes(String imageUrl) async {
+    return await _dataSource.downloadImageBytes(imageUrl);
   }
 
   void dispose() {

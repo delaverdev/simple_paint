@@ -14,6 +14,8 @@ abstract class DrawsRepository {
 
   Stream<Draw> subscribeToUserDraws(String userId);
 
+  Future<Uint8List?> downloadImageBytes(String imageUrl);
+
   Future<Draw> createDrawWithImage({
     required String userId,
     required List<DrawStroke> strokes,

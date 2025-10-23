@@ -238,7 +238,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         );
 
         if (result != null) {
-          ref.read(drawsStateProvider.notifier).updateDrawInList(result);
+          final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
+          ref.read(drawsStateProvider.notifier).updateDrawInList(drawWithImage);
           Navigator.of(context).pop();
         } else {
           Utils.showErrorDialog(
@@ -254,7 +255,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         );
 
         if (result != null) {
-          ref.read(drawsStateProvider.notifier).addDrawToList(result);
+          final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
+          ref.read(drawsStateProvider.notifier).addDrawToList(drawWithImage);
           Navigator.of(context).pop();
         } else {
           Utils.showErrorDialog(
@@ -307,9 +309,12 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
       final picker = ImagePicker();
       final x = await picker.pickImage(source: ImageSource.gallery);
-      if (x == null) return;
+      if (x == null) {
+        return;
+      }
 
       final bytes = await x.readAsBytes();
+
       final codec = await ui.instantiateImageCodec(bytes);
       final frame = await codec.getNextFrame();
       final img = frame.image;
@@ -319,6 +324,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           _bgBytes = bytes;
           _bgImage = img;
         });
+        print('Background image set in state');
       }
     } catch (e) {
       if (mounted) {
@@ -369,12 +375,15 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   Future<void> _pickColor() async {
     final color = await showCupertinoColorPicker(
-      initialColor: Colors.blue,
+      initialColor: _penColor,
       supportsAlpha: true,
     );
 
     if (color != null) {
-      setState(() => _penColor = color);
+      setState(() {
+        _penColor = color;
+        print('Color changed to: ${color.toString()}');
+      });
     }
   }
 }

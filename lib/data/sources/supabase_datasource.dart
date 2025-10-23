@@ -82,7 +82,6 @@ class SupabaseDataSource {
     try {
       await _client.storage.from('pictures').uploadBinary(filePath, imageBytes);
       final publicUrl = _client.storage.from('pictures').getPublicUrl(filePath);
-      print('UPLOADED IMAGE: $publicUrl');
 
       return publicUrl;
     } catch (e) {
@@ -113,8 +112,8 @@ class SupabaseDataSource {
     String userId,
     Function(Map<String, dynamic>) onUpdate,
   ) {
-    return _client
-        .channel('draws_channel')
+    final channel = _client
+        .channel('draws_channel_$userId')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
           schema: 'public',
@@ -128,6 +127,12 @@ class SupabaseDataSource {
             onUpdate(payload.newRecord);
           },
         )
-        .subscribe();
+        .subscribe((status, error) {
+          if (error != null) {
+            print('Supabase subscription error: $error');
+          }
+        });
+
+    return channel;
   }
 }

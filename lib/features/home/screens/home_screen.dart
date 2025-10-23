@@ -88,12 +88,15 @@ class HomeScreen extends ConsumerWidget {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadiusGeometry.circular(12),
-                            child: draw.backgroundImageBytes == null
-                                ? Container(color: CupertinoColors.white)
-                                : Image.memory(
-                                    draw.backgroundImageBytes!,
-                                    fit: BoxFit.cover,
-                                  ),
+                            child: Container(
+                              color: CupertinoColors.white,
+                              child: draw.backgroundImageBytes != null
+                                  ? Image.memory(
+                                      draw.backgroundImageBytes!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(color: CupertinoColors.white),
+                            ),
                           ),
                         );
                       },
