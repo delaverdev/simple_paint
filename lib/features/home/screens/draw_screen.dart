@@ -46,6 +46,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   late final _drawsModel = ref.read(drawsModelProvider);
 
+  final GlobalKey shareAnchorKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -109,6 +111,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                       _buildActionButton(
                         iconPath: 'assets/icons/save.svg',
                         onPressed: _saveAsPng,
+                        key: shareAnchorKey,
                       ),
                       _buildActionButton(
                         iconPath: 'assets/icons/gallery.svg',
@@ -204,8 +207,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     required String iconPath,
     required VoidCallback onPressed,
     bool isActive = false,
+    Key? key,
   }) {
     return Container(
+      key: key,
       width: 38,
       height: 38,
       margin: const EdgeInsets.symmetric(horizontal: 6),
@@ -365,9 +370,15 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       if (!mounted) return;
 
       //Шарим
-      final params = ShareParams(files: [XFile(file.path)]);
+      RenderBox box =
+          shareAnchorKey.currentContext?.findRenderObject() as RenderBox;
 
-      SharePlus.instance.share(params);
+      final params = ShareParams(
+        files: [XFile(file.path)],
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+      );
+
+      await SharePlus.instance.share(params);
     } catch (e) {
       Utils.showErrorDialog(
         context: context,
