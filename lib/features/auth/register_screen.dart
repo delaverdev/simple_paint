@@ -157,6 +157,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         placeholder: 'Введите ваше имя',
                         label: 'Имя',
                         inputFormatters: [],
+                        textInputType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
                       ),
                       SizedBox(height: 20),
                       AuthInputField(
@@ -164,6 +166,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         placeholder: 'Введите электронную почту',
                         label: 'e-mail',
                         inputFormatters: [],
+                        textInputType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                       ),
                       Container(
                         width: double.infinity,
@@ -176,6 +180,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         placeholder: '8-16 символов',
                         label: 'Пароль',
                         inputFormatters: [],
+                        obscureText: true,
+                        textInputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.next,
                       ),
                       SizedBox(height: 20),
                       AuthInputField(
@@ -183,6 +190,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         placeholder: '8-16 символов',
                         label: 'Подтверждение пароля',
                         inputFormatters: [],
+                        obscureText: true,
+                        textInputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
                       ),
                       Spacer(flex: 2),
                       AppButton(

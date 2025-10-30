@@ -11,12 +11,18 @@ class AuthInputField extends StatelessWidget {
     required this.placeholder,
     required this.label,
     required this.inputFormatters,
+    this.obscureText = false,
+    required this.textInputType,
+    required this.textInputAction,
   });
 
   final TextEditingController controller;
   final String placeholder;
   final String label;
   final List<TextInputFormatter> inputFormatters;
+  final bool obscureText;
+  final TextInputType textInputType;
+  final TextInputAction textInputAction;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +47,9 @@ class AuthInputField extends StatelessWidget {
             width: double.infinity,
             height: 24,
             child: CupertinoTextField(
+              textInputAction: textInputAction,
+              keyboardType: textInputType,
+              obscureText: obscureText,
               cursorColor: AppColors.whiteColor,
               controller: controller,
               inputFormatters: inputFormatters,

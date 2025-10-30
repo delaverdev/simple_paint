@@ -138,6 +138,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         placeholder: 'Введите электронную почту',
                         label: 'E-mail',
                         inputFormatters: [],
+                        textInputType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                       ),
                       SizedBox(height: 20),
                       AuthInputField(
@@ -145,6 +147,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         placeholder: 'Введите пароль',
                         label: 'Пароль',
                         inputFormatters: [],
+                        obscureText: true,
+                        textInputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
                       ),
                       Spacer(flex: 2),
                       AppButton(
