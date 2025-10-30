@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:simple_paint/data/repositories/repositories.dart';
 import 'package:simple_paint/domain/models/draw.dart';
 import 'package:simple_paint/domain/models/draw_stroke.dart';
@@ -160,9 +161,7 @@ class DrawsModel extends StateNotifier<DrawsState> {
           .subscribeToUserDraws(user.id)
           .listen(
             (updatedDraw) {
-              print(
-                '[DRAWS STREAM] RECIEVED: ${updatedDraw.id}',
-              );
+              print('[DRAWS STREAM] RECIEVED: ${updatedDraw.id}');
               _handleDrawUpdate(updatedDraw);
             },
             onError: (error) {
