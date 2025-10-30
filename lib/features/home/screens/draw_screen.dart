@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -12,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:simple_paint/core/services/notifications_service.dart';
 import 'package:simple_paint/domain/models/draw.dart';
 import 'package:simple_paint/features/utils/utils.dart';
 import 'package:simple_paint/features/viewmodels/draws.dart';
@@ -246,6 +248,12 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
           ref.read(drawsStateProvider.notifier).updateDrawInList(drawWithImage);
           Utils.hideLoadingDialog(context);
+
+          await NotificationsService.instance.showNow(
+            title: 'Simple Paint',
+            body: 'Рисунок успешно сохранен.',
+          );
+
           Navigator.of(context).pop();
         } else {
           Utils.hideLoadingDialog(context);
@@ -265,8 +273,19 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
           ref.read(drawsStateProvider.notifier).addDrawToList(drawWithImage);
           Utils.hideLoadingDialog(context);
+
+          await NotificationsService.instance.showNow(
+            title: 'Simple Paint',
+            body: 'Рисунок успешно сохранен.',
+          );
+
           Navigator.of(context).pop();
         } else {
+          await NotificationsService.instance.showNow(
+            title: 'Simple Paint',
+            body: 'Произошла ошибка сохранения рисунка.',
+          );
+
           Utils.hideLoadingDialog(context);
           Utils.showErrorDialog(
             context: context,
@@ -276,6 +295,11 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         }
       }
     } catch (e) {
+      await NotificationsService.instance.showNow(
+        title: 'Simple Paint',
+        body: 'Произошла ошибка сохранения рисунка.',
+      );
+
       Utils.hideLoadingDialog(context);
       Utils.showErrorDialog(
         context: context,
