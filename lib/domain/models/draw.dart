@@ -34,7 +34,7 @@ class Draw {
       'id': id,
       'user_id': userId,
       'strokes': strokes.map((stroke) => stroke.toJson()).toList(),
-      'background_image_url': backgroundImageUrl,
+      'background_image_url': backgroundImageUrl ?? '',
     };
   }
 

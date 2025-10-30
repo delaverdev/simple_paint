@@ -240,8 +240,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         if (result != null) {
           final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
           ref.read(drawsStateProvider.notifier).updateDrawInList(drawWithImage);
+          Utils.hideLoadingDialog(context);
           Navigator.of(context).pop();
         } else {
+          Utils.hideLoadingDialog(context);
           Utils.showErrorDialog(
             context: context,
             title: 'Ошибка',
@@ -257,8 +259,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         if (result != null) {
           final drawWithImage = result.copyWith(backgroundImageBytes: _bgBytes);
           ref.read(drawsStateProvider.notifier).addDrawToList(drawWithImage);
+          Utils.hideLoadingDialog(context);
           Navigator.of(context).pop();
         } else {
+          Utils.hideLoadingDialog(context);
           Utils.showErrorDialog(
             context: context,
             title: 'Ошибка',
@@ -267,13 +271,13 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
         }
       }
     } catch (e) {
+      Utils.hideLoadingDialog(context);
       Utils.showErrorDialog(
         context: context,
         title: 'Ошибка',
         message: 'Произошла неизвестная ошибка. Попробуйте еще раз.',
       );
     }
-    Utils.hideLoadingDialog(context);
   }
 
   Future<void> _pickBackground() async {
