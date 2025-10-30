@@ -27,7 +27,11 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>For adding backgound picture to draw</string>
+    <string>For adding background picture to draw</string>
+    <key>NSCameraUsageDescription</key>
+    <string>The app does not use the camera. This key is only to satisfy SDK requirements.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>The app does not use the microphone. This key is only to satisfy SDK requirements.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
