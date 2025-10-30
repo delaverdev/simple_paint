@@ -159,7 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         onPressed: _isLoading
                             ? null
                             : () {
-                                context.pushReplacement('/login/register');
+                                context.push('/login/register');
                               },
                         textColor: AppColors.blackColor,
                         bgColor: AppColors.whiteColor,

@@ -197,7 +197,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: _isLoading
                             ? null
                             : () {
-                                context.pushReplacement('/login');
+                                context.pop('/login');
                               },
                         textColor: AppColors.blackColor,
                         bgColor: AppColors.whiteColor,

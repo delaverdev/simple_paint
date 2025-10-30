@@ -24,6 +24,7 @@ final GoRouter router = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: 'register',
+          parentNavigatorKey: _rootNavigatorKey,
           builder: (BuildContext context, GoRouterState state) =>
               RegisterScreen(),
         ),

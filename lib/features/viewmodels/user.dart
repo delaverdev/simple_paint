@@ -21,9 +21,9 @@ class UserModel extends StateNotifier<User?> {
     if (sbUser != null) {
       state = User.fromSupabaseUser(sbUser);
       _drawsModel.load();
-      router.pushReplacement('/home');
+      router.replace('/home');
     } else {
-      router.pushReplacement('/login');
+      router.replace('/login');
     }
   }
 
@@ -40,7 +40,7 @@ class UserModel extends StateNotifier<User?> {
         state = user;
 
         _drawsModel.load();
-        router.pushReplacement('/home');
+        router.go('/home');
       } else {
         state = null;
       }
@@ -60,7 +60,7 @@ class UserModel extends StateNotifier<User?> {
         state = user;
 
         _drawsModel.load();
-        router.pushReplacement('/home');
+        router.go('/home');
       } else {
         state = null;
       }
@@ -76,7 +76,7 @@ class UserModel extends StateNotifier<User?> {
       await _authRepo.signOut();
 
       _drawsModel.unload();
-      router.pushReplacement('/login');
+      router.go('/login');
     } on AuthException catch (e) {
       throw SupabaseAuthErrorMapper.mapAuthException(e);
     } catch (e) {
